@@ -16,7 +16,7 @@ jobs:
         - name: npm install & build
           run: |
             npm install
-            npm run build
+            npm run compile
         - uses: actions/upload-artifact@master
           with:
             name: webpack aritiacts
