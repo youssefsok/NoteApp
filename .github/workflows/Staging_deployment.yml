@@ -2,7 +2,7 @@ name: Staging deployment
 
 on: [pull_request,push]
 env:
-  DOCKER_IMAGE_NAME: yousseff97-NoteApp
+  DOCKER_IMAGE_NAME: yousseff97/noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
 jobs:
   build:
@@ -36,3 +36,4 @@ jobs:
         with:
             repo-token: ${{secrets.GITHUB_TOKEN}}
             image-name: ${{env.DOCKER_IMAGE_NAME}}
+            tag:  
