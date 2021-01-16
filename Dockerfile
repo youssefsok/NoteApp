@@ -1,5 +1,5 @@
 FROM node:12-alpine
-LABEL Author Carmine DiMascio <cdimascio@gmail.com>
+LABEL Author Youssef Sokkah <sokkah.youssef97@gmail.com>
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -10,4 +10,3 @@ RUN npm install
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
-
