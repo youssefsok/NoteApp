@@ -4,6 +4,7 @@ on: [pull_request,push]
 env:
   DOCKER_IMAGE_NAME: yousseff97/noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
+  DOCKER_TAG: 1.0.0
 jobs:
   build:
       runs-on: ubuntu-latest
@@ -36,4 +37,4 @@ jobs:
         with:
             repo-token: ${{secrets.GITHUB_TOKEN}}
             image-name: ${{env.DOCKER_IMAGE_NAME}}
-            tag:  
+            tag: ${{env.DOCKER_TAG}}
