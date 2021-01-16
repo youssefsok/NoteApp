@@ -6,13 +6,21 @@ env:
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_TAG: 1.0.0
 jobs:
-  build:
+  Build:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v1
+        - name: npm install
+          uses: |
+            npm install
+        - name: npm run test
+          run: |
+            npm run test
+        - name: npm run lint
+          run: |
+            npm run test
         - name: npm install & build
           run: |
-            npm install
             npm run compile
         - uses: actions/upload-artifact@master
           with:
@@ -20,7 +28,7 @@ jobs:
             path: dist/
   Build-Docker-Image:
     runs-on: ubuntu-latest
-    needs: build
+    needs: Build
     name: Build image and store in Github Packages
     steps:
       - name: checkout
