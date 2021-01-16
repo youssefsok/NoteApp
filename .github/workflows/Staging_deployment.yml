@@ -1,6 +1,6 @@
 name: Staging deployment
 
-on: pull_request
+on: [pull_request,push]
 env:
   DOCKER_IMAGE_NAME: yousseff97-azure-ttt
   IMAGE_REGISTRY_URL: docker.pkg.github.com
