@@ -29,8 +29,6 @@ export default class ExpressServer {
 
     /* Db Setup start */
     const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
-    l.info(url,'url');
-
     mongoose.connect(url, { useNewUrlParser: true });
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));

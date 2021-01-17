@@ -11,14 +11,14 @@ interface INote extends Document {
     name: { type: String, required: true },
     description: { type: String, required: true }
   });
-const Note: Model<INote> = model<INote>('User', NoteSchema);
+const Note: Model<INote> = model<INote>('Note', NoteSchema);
 
 
 
 export class NotesService{
     create(name: string, description: string): Promise<INote> {
         L.info(`create note with name ${name}`);
-        let note = await INote.create({
+        let note = INote.create({
             name: name,
             description: description,
           });
