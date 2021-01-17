@@ -5,10 +5,11 @@ import http from 'http';
 import os from 'os';
 import cookieParser from 'cookie-parser';
 import l from './logger';
-
 import errorHandler from '../api/middlewares/error.handler';
 import * as OpenApiValidator from 'express-openapi-validator';
-
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import mongoose from 'mongoose';
 const app = express();
 
 export default class ExpressServer {
@@ -26,19 +27,26 @@ export default class ExpressServer {
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(express.static(`${root}/public`));
 
-    const apiSpec = path.join(__dirname, 'api.yml');
-    const validateResponses = !!(
-      process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION &&
-      process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION.toLowerCase() === 'true'
-    );
-    app.use(process.env.OPENAPI_SPEC || '/spec', express.static(apiSpec));
-    app.use(
-      OpenApiValidator.middleware({
-        apiSpec,
-        validateResponses,
-        ignorePaths: /.*\/spec(\/|$)/,
-      })
-    );
+    /* Db Setup start */
+    const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+    l.info(url,'url');
+
+    mongoose.connect(url, { useNewUrlParser: true });
+    const db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function () {
+      l.info('Connected successfully to DB');
+    });
+    /* Db Setup end   */
+
+    /* Swagger Setup start */
+    let swaggerFile: any = (__dirname + "/swagger/swagger.json");
+    let swaggerData: any = fs.readFileSync(swaggerFile, 'utf8');
+    let swaggerDocument = JSON.parse(swaggerData);
+    app.use('/api/docs', swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, null, null, null));
+    /* Swagger Setup end */
+
   }
 
   router(routes: (app: Application) => void): ExpressServer {
@@ -50,8 +58,7 @@ export default class ExpressServer {
   listen(port: number): Application {
     const welcome = (p: number) => (): void =>
       l.info(
-        `up and running in ${
-          process.env.NODE_ENV || 'development'
+        `up and running in ${process.env.NODE_ENV || 'development'
         } @: ${os.hostname()} on port: ${p}}`
       );
 
