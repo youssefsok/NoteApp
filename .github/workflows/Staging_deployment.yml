@@ -1,0 +1,50 @@
+name: Staging deployment
+
+on: [pull_request,push]
+env:
+  LOG_LEVEL: info
+  PORT: 3000
+  DOCKER_IMAGE_NAME: yousseff97-noteapp
+  IMAGE_REGISTRY_URL: docker.pkg.github.com
+  DOCKER_IMAGE_TAG: latest
+jobs:
+  Build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v1
+        - name: npm install
+          run: |
+            npm install
+        - name: npm run test
+          run: |
+            npm run lint
+        - name: npm run lint
+          run: |
+            npm run test
+        - name: npm install & build
+          run: |
+            npm run compile
+        - uses: actions/upload-artifact@master
+          with:
+            name: dist aritiact
+            path: dist/
+  Build-Docker-Image:
+    runs-on: ubuntu-latest
+    needs: Build
+    name: Build image and store in Github Packages
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+
+      - name: download artifact
+        uses: actions/download-artifact@master
+        with:
+            name: dist aritiact
+            path: dist
+
+      - name: create image and store in Packages
+        uses: mattdavis0351/actions/docker-gpr@1.3.1
+        with:
+            repo-token: ${{secrets.GITHUB_TOKEN}}
+            image-name: ${{env.DOCKER_IMAGE_NAME}}
+            tag: ${{env.DOCKER_IMAGE_TAG}}
