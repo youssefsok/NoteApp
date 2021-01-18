@@ -6,7 +6,7 @@ env:
   PORT: 3000
   NODE_ENV: test
   MONGO_DB: loubou97_notesdb
-  DOCKER_IMAGE_NAME: yousseff97-noteapp
+  DOCKER_IMAGE_NAME: yousseff97/noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
 jobs:
