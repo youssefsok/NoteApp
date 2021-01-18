@@ -35,7 +35,7 @@ export default class ExpressServer {
       const mockMongoose = new MockMongoose(mongoose);
     
       mockMongoose.prepareStorage().then(function() {
-        mongoose.connect(url, function(err) {
+        mongoose.connect(`mongodb://example.com/${process.env.MONGO_DB}`, function(err) {
           console.log('connected');
         });
       });

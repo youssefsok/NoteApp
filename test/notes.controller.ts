@@ -2,16 +2,20 @@ import 'mocha';
 import { expect } from 'chai';
 import request from 'supertest';
 import Server from '../server';
+import l from '../server/common/logger';
 
 var Mongoose = require('mongoose').Mongoose;
 var mongoose = new Mongoose();
  
 var MockMongoose = require('mock-mongoose').MockMongoose;
 var mockMongoose = new MockMongoose(mongoose);
-before(function(done) {
+
+before(function() {
   mockMongoose.prepareStorage().then(function() {
-      mongoose.connect('mongodb://example.com/TestingDB', function(err) {
-          done(err);
+    const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+
+      mongoose.connect('url', function(err) {
+        l.error(err);
       });
   });
 });
