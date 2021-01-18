@@ -32,6 +32,4 @@ before( async ()=>{server = await Server;})
           .of.length(1);
       }));
   
-      after( async ()=>{await dbHandler.clearDatabase(); await dbHandler.closeDatabase()})
-
 });
