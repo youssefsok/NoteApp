@@ -49,7 +49,8 @@ jobs:
         with:
             name: dist aritiact
             path: dist/
-          
+      - name: ls -l
+        run:  ls -l 
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
