@@ -1,14 +1,14 @@
-import {model, Schema, Model, Document} from 'mongoose';
+import { model, Schema, Model, Document } from 'mongoose';
 
 interface INote extends Document {
-    name: string;
-    description: string;
-  }
-  
-  const NoteSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    description: { type: String, required: true }
-  });
+  name: string;
+  description: string;
+}
+
+const NoteSchema: Schema = new Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+});
 const Note: Model<INote> = model<INote>('User', NoteSchema);
 
 export default Note;

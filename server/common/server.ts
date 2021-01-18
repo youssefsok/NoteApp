@@ -30,15 +30,16 @@ export default class ExpressServer {
     app.use(express.static(`${root}/public`));
 
     /* Swagger Setup start */
-    let swaggerFile: any = (__dirname + "/swagger/swagger.json");
-    let swaggerData: any = fs.readFileSync(swaggerFile, 'utf8');
-    let swaggerDocument = JSON.parse(swaggerData);
-    app.use('/api/docs', swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument, null, null, null));
+    const swaggerFile: any = __dirname + '/swagger/swagger.json';
+    const swaggerData: any = fs.readFileSync(swaggerFile, 'utf8');
+    const swaggerDocument = JSON.parse(swaggerData);
+    app.use(
+      '/api/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, null, null, null)
+    );
     /* Swagger Setup end */
-
   }
-
 
   router(routes: (app: Application) => void): ExpressServer {
     routes(app);
@@ -48,11 +49,13 @@ export default class ExpressServer {
 
   async listen(port: number): Promise<Application> {
     l.info('waiting for DB');
-    await dbHandler.connect(); 
-    
+    await dbHandler.connect();
+    l.info(`Connected to ${process.env.NODE_ENV} DB`);
+
     const welcome = (p: number) => (): void =>
       l.info(
-        `up and running in ${process.env.NODE_ENV || 'development'
+        `up and running in ${
+          process.env.NODE_ENV || 'development'
         } @: ${os.hostname()} on port: ${p}}`
       );
 
