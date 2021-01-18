@@ -109,7 +109,25 @@
               "content": {}
             }
           }
+        },
+        "get": {
+          "tags": [
+            "Notes"
+          ],
+          "description": "Get all notes",
+          "requestBody": {
+            "description": "Get all notes",
+            "content": {
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Returns all notes",
+              "content": {}
+            }
+          }
         }
+
       }
     },
     "components": {

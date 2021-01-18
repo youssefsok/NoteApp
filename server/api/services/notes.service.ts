@@ -25,6 +25,13 @@ export class NotesService{
 
         return Promise.resolve(note);
       }
+
+      all(): Promise<INote[]> {
+        L.info('fetching all notes');
+        let notes = INote.find();
+        return Promise.resolve(notes);
+      }
+
     }
 
 export default new NotesService();
