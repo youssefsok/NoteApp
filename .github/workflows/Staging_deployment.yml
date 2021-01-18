@@ -23,7 +23,7 @@ jobs:
         - name: npm run lint
           run: |
             npm run lint
-        - name: npm install & build
+        - name: npm run compile
           run: |
             npm run compile
         - uses: actions/upload-artifact@master
