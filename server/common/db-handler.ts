@@ -19,7 +19,6 @@ export class DbHandler {
     if (this.mongod) {
       uri = await this.mongod.getUri(`${process.env.MONGO_DB}`);
     }
-
     const mongooseOpts = {
       useNewUrlParser: true,
       autoReconnect: true,
