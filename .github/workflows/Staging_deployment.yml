@@ -17,10 +17,10 @@ jobs:
             npm install
         - name: npm run test
           run: |
-            npm run lint
+            npm run test
         - name: npm run lint
           run: |
-            npm run test
+            npm run lint
         - name: npm install & build
           run: |
             npm run compile
