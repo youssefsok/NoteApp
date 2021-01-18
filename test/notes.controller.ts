@@ -3,28 +3,15 @@ import { expect } from 'chai';
 import request from 'supertest';
 import Server from '../server';
 import l from '../server/common/logger';
-
-var Mongoose = require('mongoose').Mongoose;
-var mongoose = new Mongoose();
- 
-var MockMongoose = require('mock-mongoose').MockMongoose;
-var mockMongoose = new MockMongoose(mongoose);
-
-before(function() {
-  mockMongoose.prepareStorage().then(function() {
-    const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
-
-      mongoose.connect('url', function(err) {
-        l.error(err);
-      });
-  });
-});
+import dbHandler from '../server/common/db-handler';
+import { before } from 'mocha';
+let server;
 
 describe('notes', () => {
+before( async ()=>{server = await Server;})
 
-
-  it('should add a new note', () =>
-    request(Server)
+  it('should add a new note', async () =>
+    request(server)
       .post('/api/v1/notes')
       .send({ name: 'test', description: 'test-desc' })
       .expect('Content-Type', /json/)
@@ -36,13 +23,15 @@ describe('notes', () => {
       }));
 
   it('should get all notes', () =>
-    request(Server)
+    request(server)
       .get('/api/v1/notes')
       .expect('Content-Type', /json/)
       .then(r => {
         expect(r.body)
           .to.be.an('array')
-          .of.length(2);
+          .of.length(1);
       }));
+  
+      after( async ()=>{await dbHandler.clearDatabase(); await dbHandler.closeDatabase()})
 
 });
