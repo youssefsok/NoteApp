@@ -6,8 +6,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 RUN npm install
-RUN ls -l
-RUN ls -l ./dist
+
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
