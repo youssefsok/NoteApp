@@ -16,9 +16,10 @@ export class DbHandler {
    */
   public async connect() {
     let uri = `${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
-    if(process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD)
-    uri = `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` + uri;
-    uri= 'mongodb://' +uri;
+    if (process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD)
+      uri =
+        `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` + uri;
+    uri = 'mongodb://' + uri;
     if (this.mongod) {
       uri = await this.mongod.getUri(`${process.env.MONGO_DB}`);
     }
