@@ -15,7 +15,10 @@ export class DbHandler {
    * Connect to the in-memory database.
    */
   public async connect() {
-    let uri = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+    let uri = `${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+    if(process.env.MONGO_USERNAME && process.env.MONGO_PASSWORD)
+    uri = `${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@` + uri;
+    uri= 'mongodb://' +uri;
     if (this.mongod) {
       uri = await this.mongod.getUri(`${process.env.MONGO_DB}`);
     }
