@@ -50,7 +50,7 @@ jobs:
             tag: ${{env.DOCKER_IMAGE_TAG}}
 
   release:
-    if: contains(github.ref, "main")
+    if: contains(github.ref, 'main')
     needs: build
     name: Release on GitHub
     runs-on: ubuntu-latest
