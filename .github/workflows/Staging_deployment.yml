@@ -4,7 +4,9 @@ on: [pull_request,push]
 env:
   LOG_LEVEL: info
   PORT: 3000
-  DOCKER_IMAGE_NAME: yousseff97-noteapp
+  NODE_ENV: test
+  MONGO_DB: loubou97_notesdb
+  DOCKER_IMAGE_NAME: loubou97/noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
 jobs:
@@ -17,11 +19,11 @@ jobs:
             npm install
         - name: npm run test
           run: |
-            npm run lint
+            npm run test
         - name: npm run lint
           run: |
-            npm run test
-        - name: npm install & build
+            npm run lint
+        - name: npm run compile
           run: |
             npm run compile
         - uses: actions/upload-artifact@master
@@ -35,19 +37,26 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v1
+        
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: download artifact
         uses: actions/download-artifact@master
         with:
             name: dist aritiact
-            path: dist
-
-      - name: create image and store in Packages
-        uses: mattdavis0351/actions/docker-gpr@1.3.1
+            path: dist/
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
         with:
-            repo-token: ${{secrets.GITHUB_TOKEN}}
-            image-name: ${{env.DOCKER_IMAGE_NAME}}
-            tag: ${{env.DOCKER_IMAGE_TAG}}
+          context: .
+          push: true
+          tags: ${{env.DOCKER_IMAGE_NAME}}:${{env.DOCKER_IMAGE_TAG}}
+          
 
   release:
     if: contains(github.ref, 'main')

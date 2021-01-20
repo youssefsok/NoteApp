@@ -1,0 +1,85 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "NoteApp",
+      "description": "A note app",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "/api/v1"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Notes",
+        "description": "Simple note endpoints"
+      }
+    ],
+    "paths": {
+      "/notes": {
+        "post": {
+          "tags": [
+            "Notes"
+          ],
+          "description": "Create a new note",
+          "requestBody": {
+            "description": "Create a note",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoteBody"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Returns all notes",
+              "content": {}
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Notes"
+          ],
+          "description": "Get all notes",
+          "requestBody": {
+            "description": "Get all notes",
+            "content": {
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Returns all notes",
+              "content": {}
+            }
+          }
+        }
+
+      }
+    },
+    "components": {
+      "schemas": {
+        "NoteBody": {
+          "title": "note",
+          "required": [
+            "name","description"
+          ],
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "express"
+            },
+            "description": {
+              "type": "string",
+              "example": "no stress"
+            }
+          }
+        }
+      }
+    }
+  }

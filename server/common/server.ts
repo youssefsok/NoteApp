@@ -5,11 +5,14 @@ import http from 'http';
 import os from 'os';
 import cookieParser from 'cookie-parser';
 import l from './logger';
-
 import errorHandler from '../api/middlewares/error.handler';
 import * as OpenApiValidator from 'express-openapi-validator';
-
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import mongoose from 'mongoose';
+import { MockMongoose } from 'mock-mongoose';
 const app = express();
+import dbHandler from './db-handler';
 
 export default class ExpressServer {
   private routes: (app: Application) => void;
@@ -26,19 +29,16 @@ export default class ExpressServer {
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(express.static(`${root}/public`));
 
-    const apiSpec = path.join(__dirname, 'api.yml');
-    const validateResponses = !!(
-      process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION &&
-      process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION.toLowerCase() === 'true'
-    );
-    app.use(process.env.OPENAPI_SPEC || '/spec', express.static(apiSpec));
+    /* Swagger Setup start */
+    const swaggerFile: any = __dirname + '/swagger/swagger.json';
+    const swaggerData: any = fs.readFileSync(swaggerFile, 'utf8');
+    const swaggerDocument = JSON.parse(swaggerData);
     app.use(
-      OpenApiValidator.middleware({
-        apiSpec,
-        validateResponses,
-        ignorePaths: /.*\/spec(\/|$)/,
-      })
+      '/api/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, null, null, null)
     );
+    /* Swagger Setup end */
   }
 
   router(routes: (app: Application) => void): ExpressServer {
@@ -47,7 +47,11 @@ export default class ExpressServer {
     return this;
   }
 
-  listen(port: number): Application {
+  async listen(port: number): Promise<Application> {
+    l.info('waiting for DB');
+    await dbHandler.connect();
+    l.info(`Connected to ${process.env.NODE_ENV} DB`);
+
     const welcome = (p: number) => (): void =>
       l.info(
         `up and running in ${
