@@ -1,1 +1,18 @@
-
+name: Rollback
+on: 
+  workflow_dispatch:
+    branches: [main]
+jobs:
+  Rollback:
+    runs-on: ubuntu-latest
+    name: Rollback
+    steps:
+      - uses: azure/aks-set-context@v1
+        with:
+         creds: '${{ secrets.AZURE_CREDENTIALS }}'
+         resource-group: 'AKS-ressources'
+         cluster-name: 'insat'
+      - name: "Rollback"
+        run: |
+          kubectl rollout undo deployment/noteapp-api
+          
