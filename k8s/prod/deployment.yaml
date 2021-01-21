@@ -24,6 +24,9 @@ spec:
         env:
         - name: NODE_ENV
           value: "test"
+
+        - name: NODE_ENV
+          value: "info"
         ports:
         - name: api
           containerPort: 3000
