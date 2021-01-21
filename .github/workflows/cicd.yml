@@ -39,9 +39,31 @@ jobs:
     needs: Release
     name: Build image and store in Github Packages
     steps:
-      - name: checkout
+      - name: Checkout Code
         uses: actions/checkout@v1
-      
+
+      - name: Generate Version
+        id: semver
+        uses: paulhatch/semantic-version@v2.1.1
+        with:
+          branch: "main"
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          format: "v${major}.${minor}.${patch}"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.semver.outputs.version }}
+          release_name: ${{ steps.semver.outputs.version }}
+          body: Version ${{ steps.semver.outputs.version }}
+          draft: false
+          prerelease: false
+
       - name: download artifact
         uses: actions/download-artifact@master
         with:
@@ -66,39 +88,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{env.DOCKER_IMAGE_NAME}}:${GITHUB_REF##*/}
+          tags: ${{env.DOCKER_IMAGE_NAME}}:${{ steps.semver.outputs.version }}
 
-  Release:
-    needs: Build
-    name: Release on GitHub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v1
-
-      - name: Generate Version
-        id: semver
-        uses: paulhatch/semantic-version@v2.1.1
-        with:
-          branch: "main"
-          tag_prefix: "v"
-          major_pattern: "(MAJOR)"
-          minor_pattern: "(MINOR)"
-          format: "v${major}.${minor}.${patch}"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.semver.outputs.version }}
-          release_name: ${{ steps.semver.outputs.version }}
-          body: Version ${{ steps.semver.outputs.version }}
-          draft: false
-          prerelease: false
-      - name: Export Variable
-        run: export VERSION=${{steps.semver.outputs.version}}
   Deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
