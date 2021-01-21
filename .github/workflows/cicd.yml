@@ -67,8 +67,7 @@ jobs:
           push: true
           tags: ${{env.DOCKER_IMAGE_NAME}}:${{steps.semver.outputs.version}}
 
-Release:
-    if: contains(github.ref, 'main')
+  Release:
     needs: Build
     name: Release on GitHub
     runs-on: ubuntu-latest
@@ -97,7 +96,6 @@ Release:
           body: Version ${{ steps.semver.outputs.version }}
           draft: false
           prerelease: false
-          
   Deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
