@@ -58,13 +58,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+      - name: cat 
+        run: echo ${{steps.semver.outputs.version}}
+        
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{env.DOCKER_IMAGE_NAME}}:latest
+          tags: ${{env.DOCKER_IMAGE_NAME}}:${{steps.semver.outputs.version}}
 
   Release:
     needs: Build
@@ -83,8 +85,7 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           format: "v${major}.${minor}.${patch}"
-      - name: cat 
-        run: echo ${{steps.semver.outputs.version}}
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
