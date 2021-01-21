@@ -1,10 +1,7 @@
 
 name: CD
 
-on: 
-  push:
-    branches: [main]
-
+on:  workflow_dispatch
 jobs:
   Deploy:
     # The type of runner that the job will run on
