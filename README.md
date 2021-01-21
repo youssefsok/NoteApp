@@ -1,4 +1,4 @@
-# NoteApp
+# NoteApp ![CI/CD](https://github.com/yousseff97/NoteApp/workflows/CI/CD/badge.svg?branch=main)
 
 A note app
 
