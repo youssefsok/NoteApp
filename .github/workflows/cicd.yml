@@ -83,7 +83,8 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           format: "v${major}.${minor}.${patch}"
-
+      - name: cat 
+        run: echo ${{steps.semver.outputs.version}}
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
