@@ -11,7 +11,7 @@ env:
   DOCKER_IMAGE_NAME: loubou97/noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
-  NAMESPACE: noteapp
+  NAMESPACE: default
 
 jobs:
   Build:
