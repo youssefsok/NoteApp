@@ -94,3 +94,9 @@ jobs:
           body: Version ${{ steps.semver.outputs.version }}
           draft: false
           prerelease: false
+          
+      - uses: danielr1996/kubectl-action@1.0.0
+        name: Deploy
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          args: apply -f ./k8s/prod/deployment.yaml

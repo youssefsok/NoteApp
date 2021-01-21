@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: noteapp-api-production
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+          app: noteapp
+          role: api
+          env: production
+  template:
+    metadata:
+      name: api
+      labels:
+        app: noteapp
+        role: api
+        env: production
+    spec:
+      containers:
+      - name: api
+        image: loubou97/noteapp:latest
+        imagePullPolicy: Always
+        ports:
+        - name: api
+          containerPort: 3000
