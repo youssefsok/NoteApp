@@ -64,7 +64,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{env.DOCKER_IMAGE_NAME}}:${{VERSION}}
+          tags: ${{env.DOCKER_IMAGE_NAME}}:${{env.VERISON}}
 
   Release:
     needs: Build
