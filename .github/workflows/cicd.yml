@@ -86,7 +86,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{env.DOCKER_IMAGE_NAME}}:${{ steps.semver.outputs.version }}
+          tags: |
+             ${{env.DOCKER_IMAGE_NAME}}:${{ steps.semver.outputs.version }}
+             ${{env.DOCKER_IMAGE_NAME}}:latest
 
   Deploy:
     # The type of runner that the job will run on
