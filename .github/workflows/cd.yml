@@ -2,6 +2,8 @@
 name: CD
 
 on:  workflow_dispatch
+env:
+  NAMESPACE: noteapp
 jobs:
   Deploy:
     # The type of runner that the job will run on
@@ -14,7 +16,10 @@ jobs:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
             resource-group: 'AKS-ressources'
             cluster-name: 'insat'
-        
+      - name: "Create the namespace if it does not exist"
+        run: |
+          kubectl create ns ${{env.NAMESPACE}} --dry-run -o json | kubectl apply -f -
+          
       - uses: Azure/k8s-deploy@v1.3
         with:
           manifests: |
