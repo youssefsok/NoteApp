@@ -4,7 +4,8 @@ metadata:
   name: noteapp-api
 spec:
   ports:
-  - name: http
+  - name: api
+    type: LoadBalancer
     port: 8080
     targetPort: 3000
     protocol: TCP
