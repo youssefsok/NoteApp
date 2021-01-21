@@ -103,7 +103,7 @@ jobs:
     name: Deploy to k8s
     steps:
       - name: Deploy
-      - uses: danielr1996/kubectl-action@1.0.0
+        uses: danielr1996/kubectl-action@1.0.0
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           args: apply -f ./k8s/prod/deployment.yaml
