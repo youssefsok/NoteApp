@@ -1,6 +1,6 @@
 name: CI/CD
 
-on: [pull_request,push]
+on: [pull_request]
 env:
   LOG_LEVEL: info
   PORT: 3000
