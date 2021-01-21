@@ -21,6 +21,9 @@ spec:
       - name: api
         image: loubou97/noteapp:latest
         imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          value: "test"
         ports:
         - name: api
           containerPort: 3000
