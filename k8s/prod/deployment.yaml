@@ -36,7 +36,7 @@ spec:
           value: "mongodb-loubou97.alwaysdata.net"
         - name: MONGO_PORT
           value: 27017
-         - name: MONGO_DB
+        - name: MONGO_DB
           value: "loubou97_notesdb"
         ports:
         - name: api
