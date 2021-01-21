@@ -20,6 +20,8 @@ jobs:
       - uses: Azure/k8s-deploy@v1.3
         with:
           manifests: |
-           k8s/prod/deployment.yaml
+           k8s/prod/api-deployment.yaml
+           k8s/services/api.yaml
+
           images: 'loubou97/noteapp:latest'
           kubectl-version: 'latest'
