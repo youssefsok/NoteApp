@@ -95,9 +95,9 @@ jobs:
              ${{env.DOCKER_IMAGE_NAME}}:latest
        
       - name: replace Version
-        run: sed "s/$VERSION/${{ steps.semver.outputs.version }}/g" ${{env.DEPLOYMENT_FULL_PATH}} > ${{env.DEPLOYMENT_FULL_PATH}}
+        run: sed -i "s/\$VERSION/${{ steps.semver.outputs.version }}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
       - name: replace Password
-        run: sed "s/$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.SERVICE_FULL_PATH}} > ${{env.SERVICE_FULL_PATH}}
+        run: sed "s/\$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.SERVICE_FULL_PATH}} 
       - name: cat files
         run: | 
          ls
