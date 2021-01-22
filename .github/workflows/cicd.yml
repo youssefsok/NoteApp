@@ -12,8 +12,8 @@ env:
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
   NAMESPACE: default
-  DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
-  SERVICE_FULL_PATH: k8s/services/api.yaml
+  DEPLOYMENT_FULL_PATH: /k8s/prod/api-deployment.yaml
+  SERVICE_FULL_PATH: /k8s/services/api.yaml
 
 jobs:
   Build:
@@ -98,7 +98,10 @@ jobs:
       - name: replace Password
         run: sed "s/$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.SERVICE_FULL_PATH}} > ${{env.SERVICE_FULL_PATH}}
       - name: cat files
-        run: cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
+        run: |
+         cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
+         cat /k8s/* 
+         cat k8s/*
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
@@ -109,6 +112,7 @@ jobs:
           kubectl create ns ${{env.NAMESPACE}} --dry-run -o json | kubectl apply -f -
           
       - uses: Azure/k8s-deploy@v1.3
+        if: ${{ success() }}
         with:
           namespace: ${{env.NAMESPACE}}
           manifests: |
