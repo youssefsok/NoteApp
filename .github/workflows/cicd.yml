@@ -113,7 +113,6 @@ jobs:
           kubectl create ns ${{env.NAMESPACE}} --dry-run -o json | kubectl apply -f -
           
       - uses: Azure/k8s-deploy@v1.3
-        if: ${{ success() }}
         with:
           namespace: ${{env.NAMESPACE}}
           manifests: |
