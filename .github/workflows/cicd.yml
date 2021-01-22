@@ -53,6 +53,7 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
           format: "v${major}.${minor}.${patch}"
+          bump_each_commit: false
 
       - name: Create Release
         id: create_release
@@ -65,7 +66,6 @@ jobs:
           body: Version ${{ steps.semver.outputs.version }}
           draft: false
           prerelease: false
-          bump_each_commit: false
 
       - name: download artifact
         uses: actions/download-artifact@master
@@ -101,7 +101,6 @@ jobs:
       - name: cat files
         run: |
          cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
-         cat k8s/*
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
