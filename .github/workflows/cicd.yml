@@ -102,7 +102,7 @@ jobs:
         run: | 
          ls
          cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
-         cat k8s/prod/* k8s/service/* || ls k8s/ -R
+         cat k8s/prod/* k8s/services/* || ls k8s/ -R
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
@@ -115,7 +115,9 @@ jobs:
       - uses: Azure/k8s-deploy@v1.3
         with:
           namespace: ${{env.NAMESPACE}}
+          context: .
           manifests: |
            k8s/prod/api-deployment.yaml
            k8s/services/api.yaml
+          images: ${{env.DOCKER_IMAGE_NAME}}:${{steps.semver.outputs.version}}
           kubectl-version: 'latest'
