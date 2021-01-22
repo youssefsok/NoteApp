@@ -108,8 +108,12 @@ jobs:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
             resource-group: 'AKS-ressources'
             cluster-name: 'insat'
-      - name: "Create the namespace if it does not exist"
-        run: kubectl apply -f k8s/prod/api-deployment.yaml
-      - name: "Create the namespace if it does not exist"
-        run: kubectl apply -f k8s/services/api.yaml
+      - uses: Azure/k8s-deploy@v1.3
+        with:
+          namespace: ${{env.NAMESPACE}}
+          manifests: |
+           k8s/prod/api-deployment.yaml
+           k8s/services/api.yaml
+          kubectl-version: 'latest'
+
   
