@@ -38,6 +38,7 @@ jobs:
             path: dist/
   Build-Release-Push:
     runs-on: ubuntu-latest
+    needs: [Build]
     name: Build, Push image and Release Version in Github
     steps:
       - name: Checkout Code
