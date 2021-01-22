@@ -1,5 +1,5 @@
 kind: Service
-apiVersion: $VERSION
+apiVersion: v1
 metadata:
   name: noteapp-api
 spec:

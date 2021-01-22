@@ -1,5 +1,5 @@
 kind: Deployment
-apiVersion: apps/$VERSION
+apiVersion: apps/v1
 metadata:
   name: noteapp-api
 spec:
