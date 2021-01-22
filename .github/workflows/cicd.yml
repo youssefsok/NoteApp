@@ -12,8 +12,8 @@ env:
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
   NAMESPACE: default
-  DEPLOYMENT_FULL_PATH: /k8s/prod/api-deployment.yaml
-  SERVICE_FULL_PATH: /k8s/services/api.yaml
+  DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
+  SERVICE_FULL_PATH: k8s/services/api.yaml
 
 jobs:
   Build:
