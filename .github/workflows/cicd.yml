@@ -93,13 +93,12 @@ jobs:
              ${{env.DOCKER_IMAGE_NAME}}:${{ steps.semver.outputs.version }}
              ${{env.DOCKER_IMAGE_NAME}}:latest
        
-      - name: replace values  
-        uses: datamonsters/replace-action@v2
-        with:
-         files: '${{env.DEPLOYMENT_FULL_PATH}},${{env.SERVICE_FULL_PATH}}'
-         replacements: '$VERSION=${{ steps.semver.outputs.version }},$MONGO_PASSWORD=${{secrets.MONGO_PASSWORD}}'
-
-      - uses: actions/checkout@master
+      - name: replace Version
+        run: sed "s/$VERSION/${{ steps.semver.outputs.version }}/g" ${{env.DEPLOYMENT_FULL_PATH}} > ${{env.DEPLOYMENT_FULL_PATH}}
+      - name: replace Password
+        run: sed "s/$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.SERVICE_FULL_PATH}} > ${{env.SERVICE_FULL_PATH}}
+      - name: cat files
+        run: cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
