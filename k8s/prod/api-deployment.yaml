@@ -1,5 +1,5 @@
 kind: Deployment
-apiVersion: apps/v1
+apiVersion: apps/$VERSION
 metadata:
   name: noteapp-api
 spec:
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: loubou97/noteapp:latest
+        image: loubou97/noteapp:$VERSION
         imagePullPolicy: Always
         env:
         - name: NODE_ENV
@@ -31,7 +31,7 @@ spec:
         - name: MONGO_USERNAME
           value: "loubou97_admin"
         - name: MONGO_PASSWORD
-          value: "123456789loubou"
+          value: "$MONGO_PASSWORD"
         - name: MONGO_HOSTNAME
           value: "mongodb-loubou97.alwaysdata.net"
         - name: MONGO_PORT
