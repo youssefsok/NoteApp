@@ -99,8 +99,10 @@ jobs:
       - name: replace Password
         run: sed "s/$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.SERVICE_FULL_PATH}} > ${{env.SERVICE_FULL_PATH}}
       - name: cat files
-        run: |
+        run: | 
+         ls
          cat  ${{env.DEPLOYMENT_FULL_PATH}} ${{env.SERVICE_FULL_PATH}} 
+         cat k8s/prod/* k8s/service/* || ls k8s/ -R
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
