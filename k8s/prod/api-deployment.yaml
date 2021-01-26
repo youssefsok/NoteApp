@@ -21,6 +21,13 @@ spec:
       - name: api
         image: loubou97/noteapp:$VERSION
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: NODE_ENV
           value: "prod"
