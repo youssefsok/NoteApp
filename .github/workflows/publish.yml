@@ -40,6 +40,11 @@ jobs:
           name: Build, Push Docker Image
           steps:
           - uses: actions/checkout@v1
+          - name: download artifact
+            uses: actions/download-artifact@master
+            with:
+              name: dist aritiact
+              path: dist/
           - uses: pozetroninc/github-action-get-latest-release@master
             id: noteapp
             with:  
