@@ -20,8 +20,6 @@ spec:
       containers:
       - name: api
         image: $DOCKER_IMAGE_URL:$VERSION
-        imagePullSecrets:
-        - name: regcred
         imagePullPolicy: Always
         resources:
           requests:
@@ -50,3 +48,5 @@ spec:
         ports:
         - name: api
           containerPort: 3000
+      imagePullSecrets:
+        - name: regcred
