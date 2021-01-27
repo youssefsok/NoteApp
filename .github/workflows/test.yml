@@ -1,10 +1,10 @@
-name: CI/CD
+name: Test Workflow
 
 on: 
   push:
     branches-ignore:
      - main
-     
+
 env:
   LOG_LEVEL: info
   PORT: 3000
@@ -12,7 +12,7 @@ env:
 
 
 jobs:
-  Build:
+  [Build and Test]:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v1
