@@ -1,6 +1,6 @@
 {
   "name": "noteapp",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "A note app",
   "main": "index.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "nodemon": "^2.0.6",
     "pino-pretty": "^4.3.0",
     "prettier": "^2.2.1",
+    "semantic-release": "^17.3.7",
     "shelljs": "^0.8.4",
     "supertest": "^6.0.1",
     "ts-node": "^9.1.1",
