@@ -10,6 +10,8 @@ env:
   NAMESPACE: default
   DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
   SERVICE_FULL_PATH: k8s/services/api.yaml
+  AZURE_RESOURCE_GROUP: AKS-ressources
+  AZURE_CLUSTER_NAME: insat
 jobs:
   deploy:
     name: deploy
@@ -23,8 +25,8 @@ jobs:
       - uses: azure/aks-set-context@v1
         with:
             creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-            resource-group: 'AKS-ressources'
-            cluster-name: 'insat'
+            resource-group: ${{env.AZURE_RESOURCE_GROUP}}
+            cluster-name: ${{env.AZURE_CLUSTER_NAME}}
 
       - name: Replace Version
         run: sed -i "s/\$VERSION/${{steps.noteapp.outputs.release}}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
