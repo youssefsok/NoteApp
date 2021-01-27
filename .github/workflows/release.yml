@@ -1,4 +1,4 @@
-name: Release
+name: Release & Push Docker Image
 
 on:
   push:
@@ -8,9 +8,15 @@ env:
   LOG_LEVEL: info
   PORT: 3000
   MONGO_DB: loubou97_notesdb
-
+  NODE_ENV: prod
+  DOCKER_IMAGE_NAME: noteapp
+  IMAGE_REGISTRY_URL: docker.pkg.github.com
+  DOCKER_IMAGE_TAG: latest
+  NAMESPACE: default
+  DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
+  SERVICE_FULL_PATH: k8s/services/api.yaml
 jobs:
-  release:
+  release: 
     name: Release
     runs-on: ubuntu-latest
     steps:
@@ -24,3 +30,42 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  Build:
+      needs: release
+      runs-on: ubuntu-latest
+      name: Build the app
+      steps:
+        - uses: actions/checkout@v1
+        - name: npm install
+          run: |
+            npm install
+        - name: npm run compile
+          run: |           
+            npm run compile
+        - uses: actions/upload-artifact@master
+          with:
+            name: dist aritiact
+            path: dist/
+  Build_Docker_Image: 
+          runs-on: ubuntu-latest 
+          needs: [Build]
+          name: Build, Push Docker Image
+          steps:
+          - uses: actions/checkout@v1
+          - name: download artifact
+            uses: actions/download-artifact@master
+            with:
+              name: dist aritiact
+              path: dist/
+          - uses: pozetroninc/github-action-get-latest-release@master
+            id: noteapp
+            with:  
+              repository: ${{ github.repository }}
+
+          - name: Build and Publish head Docker image
+            uses: VaultVulp/gp-docker-action@1.1.7
+            with:
+              github-token: ${{ secrets.GITHUB_TOKEN }} 
+              image-name: ${{env.DOCKER_IMAGE_NAME}} 
+              image-tag: ${{steps.noteapp.outputs.release}}
+
