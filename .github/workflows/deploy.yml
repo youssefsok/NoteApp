@@ -2,8 +2,7 @@ name: Deploy
 on:
   registry_package:
     types: [published]
-  workflow_dispatch:
-    branches: main
+    
 env:
   DOCKER_IMAGE_URL: docker.pkg.github.com/yousseff97/noteapp/noteapp
   DOCKER_IMAGE_PULL_SECRET: regcred
