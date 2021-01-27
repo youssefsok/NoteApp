@@ -7,6 +7,9 @@ on:
 env:
   DOCKER_IMAGE_URL: docker.pkg.github.com/yousseff97/noteapp/noteapp
   DOCKER_IMAGE_PULL_SECRET: regcred
+  NAMESPACE: default
+  DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
+  SERVICE_FULL_PATH: k8s/services/api.yaml
 jobs:
   deploy:
     name: deploy
@@ -23,13 +26,15 @@ jobs:
             resource-group: 'AKS-ressources'
             cluster-name: 'insat'
 
+      - name: replace Version
+        run: sed -i "s/\$VERSION/${{steps.noteapp.outputs.release}}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
+      - name: replace Password
+        run: sed -i "s/\$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.DEPLOYMENT_FULL_PATH}}
+
       - uses: Azure/k8s-deploy@v1.3
         with:
           namespace: ${{env.NAMESPACE}}
           manifests: |
            k8s/prod/api-deployment.yaml
            k8s/services/api.yaml
-          Images: ${{env.DOCKER_IMAGE_URL}}:${{steps.noteapp.outputs.release}}
-          imagepullsecrets: |
-           ${{env.DOCKER_IMAGE_PULL_SECRET}}
           kubectl-version: 'latest'
