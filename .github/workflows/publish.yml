@@ -22,6 +22,11 @@ jobs:
   Build:
       runs-on: ubuntu-latest
       steps:
+        - uses: jaxxstorm/action-install-gh-release@release/v1-alpha
+          with: 
+            repo: ${{ github.repository }}
+        - name: cat
+          run: ls -R
         - uses: pozetroninc/github-action-get-latest-release@master
           with:  
             repository: ${{ github.repository }}
