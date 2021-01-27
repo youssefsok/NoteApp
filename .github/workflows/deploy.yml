@@ -26,9 +26,11 @@ jobs:
             resource-group: 'AKS-ressources'
             cluster-name: 'insat'
 
-      - name: replace Version
+      - name: Replace Version
         run: sed -i "s/\$VERSION/${{steps.noteapp.outputs.release}}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
-      - name: replace Password
+      - name: Replace Image URL
+        run: sed -i "s/\$DOCKER_IMAGE_URL/${{env.DOCKER_IMAGE_URL}}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
+      - name: Replace Password
         run: sed -i "s/\$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.DEPLOYMENT_FULL_PATH}}
 
       - uses: Azure/k8s-deploy@v1.3
