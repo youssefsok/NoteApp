@@ -19,7 +19,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-openapi-validator": "^4.10.6",
-    "mongo-in-memory": "0.0.5",
     "mongodb-memory-server": "^6.9.3",
     "mongoose": "^5.11.12",
     "pino": "^6.8.0",

@@ -1,0 +1,48 @@
+name: Deploy
+
+on: 
+  release:
+    branches: main
+env:
+  LOG_LEVEL: info
+  PORT: 3000
+  NODE_ENV: test
+  MONGO_DB: loubou97_notesdb
+  DOCKER_IMAGE_NAME: noteapp
+  IMAGE_REGISTRY_URL: docker.pkg.github.com
+  DOCKER_IMAGE_TAG: latest
+  NAMESPACE: default
+  DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
+  SERVICE_FULL_PATH: k8s/services/api.yaml
+
+jobs:
+  Build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: pozetroninc/github-action-get-latest-release@master
+          with:  
+            repository: ${{ github.repository }}
+        - name: npm install
+          run: |
+            npm install
+        - name: npm run compile
+          run: |           
+            npm run compile
+        - uses: actions/upload-artifact@master
+          with:
+            name: dist aritiact
+            path: dist/
+  Build_Docker_Image: 
+          runs-on: ubuntu-latest 
+          needs: [Build]
+          name: Build, Push image and Release Version in Github
+          steps:
+          - uses: pozetroninc/github-action-get-latest-release@master
+            id: noteapp
+            with:  
+              repository: ${{ github.repository }}
+          - uses: mattdavis0351/actions/docker-gpr@1.3.0
+            with:
+              repo-token: ${{secrets.GITHUB_TOKEN}}
+              image-name: ${{env.DOCKER_IMAGE_NAME}}
+              tag: ${{steps.noteapp.outputs.release}}
