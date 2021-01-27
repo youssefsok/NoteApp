@@ -22,14 +22,7 @@ jobs:
   Build:
       runs-on: ubuntu-latest
       steps:
-        - uses: jaxxstorm/action-install-gh-release@release/v1-alpha
-          with: 
-            repo: ${{ github.repository }}
-        - name: cat
-          run: ls -R
-        - uses: pozetroninc/github-action-get-latest-release@master
-          with:  
-            repository: ${{ github.repository }}
+        - uses: actions/checkout@v1
         - name: npm install
           run: |
             npm install
@@ -45,6 +38,7 @@ jobs:
           needs: [Build]
           name: Build, Push image and Release Version in Github
           steps:
+          - uses: actions/checkout@v1
           - uses: pozetroninc/github-action-get-latest-release@master
             id: noteapp
             with:  
