@@ -1,0 +1,34 @@
+name: Test Workflow
+
+on: 
+  push:
+    branches-ignore:
+     - main
+
+env:
+  LOG_LEVEL: info
+  PORT: 3000
+  MONGO_DB: loubou97_notesdb
+
+
+jobs:
+  Build_and_Test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v1
+        - name: npm install
+          run: |
+            npm install
+        - name: npm run test
+          run: |
+            npm run test
+        - name: npm run lint
+          run: |
+            npm run lint
+        - name: npm run compile
+          run: |
+            npm run compile
+        - uses: actions/upload-artifact@master
+          with:
+            name: dist aritiact
+            path: dist/
