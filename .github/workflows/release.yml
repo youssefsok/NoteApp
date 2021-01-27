@@ -1,4 +1,4 @@
-name: Release & Push Docker Image
+name: Release,Push Docker Image & Deploy
 
 on:
   push:
@@ -71,6 +71,7 @@ jobs:
               image-tag: ${{steps.noteapp.outputs.release}}
   deploy:
     name: deploy
+    needs: Build_Docker_Image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
