@@ -55,5 +55,6 @@
   "release": {
     "branches": ["main"]
   },
+  "private": true,
   "author": "Carmine DiMascio <cdimascio@gmail.com> (https://github.com/cdimascio)"
 }
