@@ -12,26 +12,27 @@ env:
   DOCKER_IMAGE_NAME: noteapp
   IMAGE_REGISTRY_URL: docker.pkg.github.com
   DOCKER_IMAGE_TAG: latest
+  DOCKER_IMAGE_URL: docker.pkg.github.com/yousseff97/noteapp/noteapp
+  DOCKER_IMAGE_PULL_SECRET: regcred
   NAMESPACE: default
   DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
   SERVICE_FULL_PATH: k8s/services/api.yaml
+  AZURE_RESOURCE_GROUP: AKS-ressources
+  AZURE_CLUSTER_NAME: insat
 jobs:
   release: 
     name: Release
+    needs: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      - run: npm install
-      - run: npm run compile --if-present
-      - run: npm run test
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   Build:
-      needs: release
       runs-on: ubuntu-latest
       name: Build the app
       steps:
@@ -62,10 +63,38 @@ jobs:
             with:  
               repository: ${{ github.repository }}
 
-          - name: Build and Publish head Docker image
+          - name: Build and Publish Docker image
             uses: VaultVulp/gp-docker-action@1.1.7
             with:
               github-token: ${{ secrets.GITHUB_TOKEN }} 
               image-name: ${{env.DOCKER_IMAGE_NAME}} 
               image-tag: ${{steps.noteapp.outputs.release}}
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: pozetroninc/github-action-get-latest-release@master
+        id: noteapp
+        with:  
+            repository: ${{ github.repository }}
+      - uses: azure/aks-set-context@v1
+        with:
+            creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+            resource-group: ${{env.AZURE_RESOURCE_GROUP}}
+            cluster-name: ${{env.AZURE_CLUSTER_NAME}}
 
+      - name: Replace Version
+        run: sed -i "s/\$VERSION/${{steps.noteapp.outputs.release}}/g" ${{env.DEPLOYMENT_FULL_PATH}} 
+      - name: Replace Image URL
+        run: sed -i "s+\$DOCKER_IMAGE_URL+${{env.DOCKER_IMAGE_URL}}+g" ${{env.DEPLOYMENT_FULL_PATH}} 
+      - name: Replace Password
+        run: sed -i "s/\$MONGO_PASSWORD/${{secrets.MONGO_PASSWORD}}/g" ${{env.DEPLOYMENT_FULL_PATH}}
+
+      - uses: Azure/k8s-deploy@v1.3
+        with:
+          namespace: ${{env.NAMESPACE}}
+          manifests: |
+           k8s/prod/api-deployment.yaml
+           k8s/services/api.yaml
+          kubectl-version: 'latest'
