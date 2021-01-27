@@ -1,8 +1,9 @@
-name: Deploy
+name: Publish Docker Image
 
 on: 
   release:
     branches: main
+  workflow_run:
 env:
   LOG_LEVEL: info
   PORT: 3000
