@@ -16,7 +16,7 @@ env:
   DEPLOYMENT_FULL_PATH: k8s/prod/api-deployment.yaml
   SERVICE_FULL_PATH: k8s/services/api.yaml
 jobs:
-  release:
+  release: 
     name: Release
     runs-on: ubuntu-latest
     steps:
