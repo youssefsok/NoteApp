@@ -59,6 +59,26 @@
           }
         }
 
+      },
+      "/notes/cpu": {
+        "get": {
+          "tags": [
+            "Notes"
+          ],
+          "description": "Load CPU",
+          "requestBody": {
+            "description": "Load CPU",
+            "content": {
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Load CPU",
+              "content": {}
+            }
+          }
+        }
+
       }
     },
     "components": {
